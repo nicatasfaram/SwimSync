@@ -4,13 +4,14 @@ namespace SwimSync.Core.Models
 {
     public class Parent
     {
-        private Parent(Guid id, string firstName, string lastName, Gender gender,string contactNumber)
+        private Parent(Guid id, string firstName, string lastName, Gender gender, string contactNumber, Swimmer swimmer)
         {
             Id = id;
             FirstName = firstName;
             LastName = lastName;
             Gender = gender;
             ContactNumber = contactNumber;
+            Swimmer = swimmer;
         }
 
         public Guid Id { get; }
@@ -23,8 +24,9 @@ namespace SwimSync.Core.Models
 
         public string ContactNumber { get; } = string.Empty;
 
+        public Swimmer Swimmer { get; }
 
-        public static Result<Parent> Create(Guid id, string firstName, string lastName, Gender gender, string contactNumber)
+        public static Result<Parent> Create(Guid id, string firstName, string lastName, Gender gender, string contactNumber, Swimmer swimmer)
         {
             if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
             {
@@ -36,7 +38,7 @@ namespace SwimSync.Core.Models
                 return Result.Failure<Parent>($"{nameof(contactNumber)} cannot be null or empty");
             }
 
-            var parent = new Parent(id, firstName, lastName, gender, contactNumber);
+            var parent = new Parent(id, firstName, lastName, gender, contactNumber, swimmer);
 
             return Result.Success<Parent>(parent);
         }

@@ -6,6 +6,8 @@ namespace SwimSync.Core.Models
     {
         private List<Parent> _parents = [];
 
+        private List<AttendanceRecord> _attendanceRecords = []; 
+
         private Swimmer(
             Guid id,
             string firstName,
@@ -13,9 +15,10 @@ namespace SwimSync.Core.Models
             DateOnly dob,
             Gender gender,
             string idNumber,
+            TrainingGroup? trainingGroup,
             string contactNumber,
             List<Parent> parents,
-            TrainingGroup? trainingGroup
+            List<AttendanceRecord> attendanceRecords
             )
         {
             Id = id;
@@ -24,9 +27,10 @@ namespace SwimSync.Core.Models
             DOB = dob;
             Gender = gender;
             IdNumber = idNumber;
+            TrainingGroup = trainingGroup;
             ContactNumber = contactNumber;
             _parents = parents;
-            TrainingGroup = trainingGroup;
+            _attendanceRecords = attendanceRecords;
         }
 
         public Guid Id { get; set; }
@@ -43,11 +47,13 @@ namespace SwimSync.Core.Models
 
         public DateTime RegisterDate { get; } = DateTime.MinValue;
 
-        public IReadOnlyList<Parent> Parents => _parents;
+        public TrainingGroup? TrainingGroup { get; } = null;
 
         public string ContactNumber { get; } = string.Empty;
 
-        public TrainingGroup? TrainingGroup { get; } = null;
+        public IReadOnlyList<Parent> Parents => _parents;
+
+        public IReadOnlyList<AttendanceRecord> AttendanceRecords => _attendanceRecords;
 
 
         public static Result<Swimmer> Create(
@@ -59,7 +65,8 @@ namespace SwimSync.Core.Models
            string idNumber,
            string contactNumber,
            List<Parent> parents,
-           TrainingGroup? trainingGroup
+           TrainingGroup? trainingGroup,
+           List<AttendanceRecord> attendanceRecords
            )
         {
             if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
@@ -67,7 +74,17 @@ namespace SwimSync.Core.Models
                 return Result.Failure<Swimmer>($"{nameof(firstName)} and {nameof(lastName)} cannot be null or empty");
             }
 
-            var swimmmer = new Swimmer(id, firstName, lastName, dob, gender, idNumber, contactNumber, parents, trainingGroup);
+            var swimmmer = new Swimmer(
+                id,
+                firstName,
+                lastName,
+                dob,
+                gender,
+                idNumber,
+                trainingGroup,
+                contactNumber,
+                parents,
+                attendanceRecords);
 
             return Result.Success(swimmmer);
         }

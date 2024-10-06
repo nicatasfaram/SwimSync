@@ -4,7 +4,16 @@ namespace SwimSync.Core.Models
 {
     public class Coach
     {
-        private Coach(Guid id, string firstName, string lastName, DateOnly dob, Gender gender, string contactNumber)
+        private List<TrainingGroup> _trainingGroups = [];
+
+        private Coach(
+            Guid id,
+            string firstName,
+            string lastName,
+            DateOnly dob,
+            Gender gender,
+            string contactNumber,
+            List<TrainingGroup> trainingGroups)
         {
             Id = id;
             FirstName = firstName;
@@ -12,6 +21,7 @@ namespace SwimSync.Core.Models
             DOB = dob;
             Gender = gender;
             ContactNumber = contactNumber;
+            _trainingGroups = trainingGroups;
         }
 
         public Guid Id { get; }
@@ -26,9 +36,16 @@ namespace SwimSync.Core.Models
 
         public string ContactNumber { get; } = string.Empty;
 
+        public IReadOnlyList<TrainingGroup> TrainingGroups => _trainingGroups;
 
-
-        public static Result<Coach> Create(Guid id, string firstName, string lastName, DateOnly dob, Gender gender, string contactNumber)
+        public static Result<Coach> Create(
+            Guid id,
+            string firstName,
+            string lastName,
+            DateOnly dob,
+            Gender gender,
+            string contactNumber,
+            List<TrainingGroup> trainingGroups)
         {
             if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
             {
@@ -40,7 +57,7 @@ namespace SwimSync.Core.Models
                 return Result.Failure<Coach>($"{nameof(contactNumber)} cannot be null or empty");
             }
 
-            var coach = new Coach(id, firstName, lastName, dob, gender, contactNumber);
+            var coach = new Coach(id, firstName, lastName, dob, gender, contactNumber, trainingGroups);
 
             return Result.Success<Coach>(coach);
         }

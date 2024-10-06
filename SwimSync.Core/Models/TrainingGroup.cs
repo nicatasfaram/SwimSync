@@ -8,15 +8,23 @@ namespace SwimSync.Core.Models
 
         private List<AttendanceDay> _attendanceDays = [];
 
-        private TrainingGroup(Guid id, Coach coach, List<Swimmer> swimmers, List<AttendanceDay> attendanceDays)
+        private TrainingGroup(
+            Guid id,
+            string description,
+            Coach coach,
+            List<Swimmer> swimmers,
+            List<AttendanceDay> attendanceDays)
         {
             Id = id;
+            Description = description;
             Coach = coach;
             _swimmers = swimmers;
             _attendanceDays = attendanceDays;
         }
 
         public Guid Id { get; }
+
+        public string Description { get; } = string.Empty;
 
         public Coach? Coach { get; } = null;
 
@@ -25,7 +33,12 @@ namespace SwimSync.Core.Models
         public IReadOnlyList<AttendanceDay> AttendanceDays => _attendanceDays;
 
 
-        public static Result<TrainingGroup> Create(Guid id, Coach coach, List<Swimmer> swimmers, List<AttendanceDay> attendanceDays)
+        public static Result<TrainingGroup> Create(
+            Guid id,
+            string description,
+            Coach coach,
+            List<Swimmer> swimmers,
+            List<AttendanceDay> attendanceDays)
         {
 
             if (coach is null)
@@ -33,7 +46,7 @@ namespace SwimSync.Core.Models
                 return Result.Failure<TrainingGroup>($"{nameof(coach)} cannot be null");
             }
 
-            var trainingGroup = new TrainingGroup(id, coach, swimmers, attendanceDays);
+            var trainingGroup = new TrainingGroup(id, description, coach, swimmers, attendanceDays);
 
             return Result.Success(trainingGroup);
         }
